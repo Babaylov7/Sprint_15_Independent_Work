@@ -1,5 +1,6 @@
-package com.example.sprint15independentwork
+package com.example.sprint15independentwork.data.network
 
+import com.example.sprint15independentwork.data.dto.MoviesSearchResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

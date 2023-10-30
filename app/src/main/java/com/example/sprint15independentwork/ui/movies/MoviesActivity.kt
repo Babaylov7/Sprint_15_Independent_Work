@@ -1,4 +1,4 @@
-package com.example.sprint15independentwork
+package com.example.sprint15independentwork.ui.movies
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,12 +13,16 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.sprint15independentwork.ui.poster.PosterActivity
+import com.example.sprint15independentwork.R
+import com.example.sprint15independentwork.data.dto.MoviesSearchResponse
+import com.example.sprint15independentwork.data.network.IMDbApiService
+import com.example.sprint15independentwork.domain.models.Movie
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.logging.Handler
 
 class MoviesActivity : AppCompatActivity() {
 

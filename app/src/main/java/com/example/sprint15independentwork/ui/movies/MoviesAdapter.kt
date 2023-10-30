@@ -1,7 +1,8 @@
-package com.example.sprint15independentwork
+package com.example.sprint15independentwork.ui.movies
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.sprint15independentwork.domain.models.Movie
 
 class MoviesAdapter(private val clickListener: MovieClickListener) : RecyclerView.Adapter<MovieViewHolder>() {
 

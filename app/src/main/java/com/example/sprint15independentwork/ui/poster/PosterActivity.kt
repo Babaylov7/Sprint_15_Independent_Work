@@ -1,9 +1,10 @@
-package com.example.sprint15independentwork
+package com.example.sprint15independentwork.ui.poster
 
 import android.app.Activity
 import android.os.Bundle
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.example.sprint15independentwork.R
 
 class PosterActivity : Activity() {
 
