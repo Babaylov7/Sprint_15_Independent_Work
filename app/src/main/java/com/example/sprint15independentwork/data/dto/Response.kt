@@ -1,4 +1,5 @@
 package com.example.sprint15independentwork.data.dto
 
-class Response {
+open class Response() {
+    var resultCode = 0
 }

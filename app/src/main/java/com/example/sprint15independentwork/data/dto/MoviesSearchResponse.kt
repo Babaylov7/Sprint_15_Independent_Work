@@ -4,4 +4,4 @@ import com.example.sprint15independentwork.domain.models.Movie
 
 data class MoviesSearchResponse(val searchType: String,
                                 val expression: String,
-                                val results: List<Movie>)
+                                val results: List<MovieDto>) : Response()
