@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sprint15independentwork.Creator
 import com.example.sprint15independentwork.ui.poster.PosterActivity
 import com.example.sprint15independentwork.R
+import com.example.sprint15independentwork.domain.models.Movie
 import com.example.sprint15independentwork.presentation.movies.MoviesSearchPresenter
 import com.example.sprint15independentwork.presentation.movies.MoviesView
 
@@ -37,7 +38,7 @@ class MoviesActivity : Activity(), MoviesView {
     private var textWatcher: TextWatcher? = null
     private val handler = Handler(Looper.getMainLooper())
 
-    private val moviesSearchPresenter = Creator.provideMoviesSearchPresenter(moviesView = this,  context = this, adapter = adapter)
+    private val moviesSearchPresenter = Creator.provideMoviesSearchPresenter(moviesView = this,  context = this)
 
     private lateinit var queryInput: EditText
     private lateinit var placeholderMessage: TextView
@@ -74,7 +75,6 @@ class MoviesActivity : Activity(), MoviesView {
         textWatcher?.let { queryInput.addTextChangedListener(it) }
         // Конец кусочка кода из Presenter
 
-        moviesSearchPresenter.onCreate()
     }
 
     override fun onDestroy() {
@@ -108,5 +108,11 @@ class MoviesActivity : Activity(), MoviesView {
 
     override fun changePlaceholderText(newPlaceholderText: String) {
         placeholderMessage.text = newPlaceholderText
+    }
+
+    override fun updateMoviesList(newMoviesList: List<Movie>) {
+        adapter.movies.clear()
+        adapter.movies.addAll(newMoviesList)
+        adapter.notifyDataSetChanged()
     }
 }

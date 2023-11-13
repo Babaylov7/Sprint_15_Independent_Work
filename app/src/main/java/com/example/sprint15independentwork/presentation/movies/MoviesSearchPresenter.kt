@@ -21,8 +21,7 @@ import com.example.sprint15independentwork.ui.movies.MoviesAdapter
 
 class MoviesSearchPresenter(
     private val view: MoviesView,
-    private val context: Context,
-    private val adapter: MoviesAdapter
+    private val context: Context
 ) {
     private val moviesInteractor = Creator.provideMoviesInteractor(context)
 
@@ -47,9 +46,6 @@ class MoviesSearchPresenter(
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
 
-    fun onCreate() {
-        adapter.movies = movies
-    }
 
     fun onDestroy() {
         handler.removeCallbacks(searchRunnable)
@@ -61,40 +57,40 @@ class MoviesSearchPresenter(
             view.showMoviesList(false)
             view.showProgressBar(true)
 
-            moviesInteractor.searchMovies(
-                newSearchText,
-                object : MoviesInteractor.MoviesConsumer {
-                    override fun consume(foundMovies: List<Movie>?, errorMessage: String?) {
-                        handler.post {
-                            view.showProgressBar(false)
-                            if (foundMovies != null) {
-                                movies.clear()
-                                movies.addAll(foundMovies)
-                                adapter.notifyDataSetChanged()
-                                view.showMoviesList(true)
-                            }
-                            if (errorMessage != null) {
-                                showMessage("Что-то пошло не так", errorMessage)
-                            } else if (movies.isEmpty()) {
-                                showMessage("Ничего не нашлось", "")
-                            } else {
-                                hideMessage()
-                            }
+            moviesInteractor.searchMovies(newSearchText, object : MoviesInteractor.MoviesConsumer {
+                override fun consume(foundMovies: List<Movie>?, errorMessage: String?) {
+                    handler.post {
+                        view.showProgressBar(false)
+                        if (foundMovies != null) {
+                            // Обновляем список на экране
+                            movies.clear()
+                            movies.addAll(foundMovies)
+                            view.updateMoviesList(movies)
+                            view.showMoviesList(true)
+                        }
+                        if (errorMessage != null) {
+                            showMessage("Что-то пошло не так", errorMessage)
+                        } else if (movies.isEmpty()) {
+                            showMessage("Ничего не нашлось", "")
+                        } else {
+                            hideMessage()
                         }
                     }
                 }
-            )
+            })
         }
     }
 
     private fun showMessage(text: String, additionalMessage: String) {
         if (text.isNotEmpty()) {
             view.showPlaceholderMessage(true)
+
+            // Обновляем список на экране
             movies.clear()
-            adapter.notifyDataSetChanged()
+            view.updateMoviesList(movies)
+
             view.changePlaceholderText(text)
             if (additionalMessage.isNotEmpty()) {
-                // Поменяли view на Context
                 Toast.makeText(context, additionalMessage, Toast.LENGTH_LONG)
                     .show()
             }
