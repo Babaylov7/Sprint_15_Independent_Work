@@ -1,5 +1,8 @@
 package com.example.sprint15independentwork.data.network
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import com.example.sprint15independentwork.data.NetworkClient
 import com.example.sprint15independentwork.data.dto.MoviesSearchRequest
 import com.example.sprint15independentwork.data.dto.Response
@@ -7,7 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 
-class RetrofitNetworkClient: NetworkClient {
+class RetrofitNetworkClient(private val context: Context) : NetworkClient {
 
     private val imbBaseUrl = "https://imdb-api.com"
 
@@ -27,6 +30,20 @@ class RetrofitNetworkClient: NetworkClient {
         } else {
             return Response().apply { resultCode = 400 }
         }
+    }
+
+    private fun isConnected(): Boolean {
+        val connectivityManager = context.getSystemService(
+            Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if (capabilities != null) {
+            when {
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> return true
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> return true
+                capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> return true
+            }
+        }
+        return false
     }
 
 }
