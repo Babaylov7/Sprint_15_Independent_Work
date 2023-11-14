@@ -1,10 +1,14 @@
 package com.example.sprint15independentwork.presentation.movies
 
-import com.example.sprint15independentwork.domain.models.Movie
+import moxy.MvpView
+import moxy.viewstate.strategy.AddToEndSingleStrategy
+import moxy.viewstate.strategy.OneExecutionStateStrategy
+import moxy.viewstate.strategy.StateStrategyType
 
-interface MoviesView {
+interface MoviesView: MvpView {
 
+    @StateStrategyType(AddToEndSingleStrategy::class)
     fun render(state: MoviesState)
-
+    @StateStrategyType(OneExecutionStateStrategy::class)
     fun showMessage(additionalMessage: String)
 }

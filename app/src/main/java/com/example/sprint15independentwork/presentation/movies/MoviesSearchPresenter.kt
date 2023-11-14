@@ -7,18 +7,17 @@ import com.example.sprint15independentwork.Creator
 import com.example.sprint15independentwork.R
 import com.example.sprint15independentwork.domain.api.MoviesInteractor
 import com.example.sprint15independentwork.domain.models.Movie
+import moxy.MvpPresenter
 
 class MoviesSearchPresenter(
     private val context: Context
-) {
+) : MvpPresenter<MoviesView>() {
     private val moviesInteractor = Creator.provideMoviesInteractor(context)
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
-    private var view: MoviesView? = null
-    private var state: MoviesState? = null
     private var latestSearchText: String? = null
 
     private val movies = ArrayList<Movie>()
@@ -41,18 +40,12 @@ class MoviesSearchPresenter(
         handler.removeCallbacks(searchRunnable)
         handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
     }
-
-    fun onDestroy() {
-        handler.removeCallbacks(searchRunnable)
-    }
-    fun attachView(view: MoviesView) {
-        this.view = view
-        state?.let { view.render(it) }
+    override fun onDestroy() {
+        handler.removeCallbacksAndMessages(searchRunnable)
     }
 
-    fun detachView() {
-        this.view = null
-    }
+
+
 
     private fun searchRequest(newSearchText: String) {
         if (newSearchText.isNotEmpty()) {
@@ -81,7 +74,7 @@ class MoviesSearchPresenter(
                                         errorMessage = context.getString(R.string.something_went_wrong),
                                     )
                                 )
-                                view?.showMessage(errorMessage)
+                                viewState?.showMessage(errorMessage)
                             }
 
                             movies.isEmpty() -> {
@@ -112,7 +105,6 @@ class MoviesSearchPresenter(
     }
 
     private fun renderState(state: MoviesState) {
-        this.state = state
-        this.view?.render(state)
+        viewState.render(state)
     }
 }

@@ -22,8 +22,21 @@ import com.example.sprint15independentwork.domain.models.Movie
 import com.example.sprint15independentwork.presentation.movies.MoviesSearchPresenter
 import com.example.sprint15independentwork.presentation.movies.MoviesState
 import com.example.sprint15independentwork.presentation.movies.MoviesView
+import moxy.MvpActivity
+import moxy.presenter.InjectPresenter
+import moxy.presenter.ProvidePresenter
 
-class MoviesActivity : Activity(), MoviesView {
+class MoviesActivity : MvpActivity(), MoviesView {
+
+    @InjectPresenter
+    lateinit var moviesSearchPresenter: MoviesSearchPresenter
+
+    @ProvidePresenter
+    fun providePresenter(): MoviesSearchPresenter {
+        return Creator.provideMoviesSearchPresenter(
+            context = this.applicationContext,
+        )
+    }
 
     companion object {
         private const val CLICK_DEBOUNCE_DELAY = 1000L
@@ -41,8 +54,6 @@ class MoviesActivity : Activity(), MoviesView {
     private var textWatcher: TextWatcher? = null
     private val handler = Handler(Looper.getMainLooper())
 
-    private var moviesSearchPresenter : MoviesSearchPresenter? = null
-
     private lateinit var queryInput: EditText
     private lateinit var placeholderMessage: TextView
     private lateinit var moviesList: RecyclerView
@@ -53,16 +64,6 @@ class MoviesActivity : Activity(), MoviesView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        moviesSearchPresenter = (this.applicationContext as? MoviesApplication)?.moviesSearchPresenter
-        if (moviesSearchPresenter == null) {
-            moviesSearchPresenter = Creator.provideMoviesSearchPresenter(
-                context = this.applicationContext
-            )
-            (this.applicationContext as? MoviesApplication)?.moviesSearchPresenter = moviesSearchPresenter
-        }
-        moviesSearchPresenter?.attachView(this)
-
-        // Кусочек кода, который был в Presenter
         placeholderMessage = findViewById(R.id.placeholderMessage)
         queryInput = findViewById(R.id.queryInput)
         moviesList = findViewById(R.id.locations)
@@ -134,39 +135,5 @@ class MoviesActivity : Activity(), MoviesView {
         Toast.makeText(this, additionalMessage, Toast.LENGTH_LONG)
             .show()
     }
-    override fun onStart() {
-        super.onStart()
-        moviesSearchPresenter?.attachView(this)
-    }
 
-    override fun onResume() {
-        super.onResume()
-        moviesSearchPresenter?.attachView(this)
-    }
-    override fun onPause() {
-        super.onPause()
-        moviesSearchPresenter?.detachView()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        moviesSearchPresenter?.detachView()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        textWatcher?.let { queryInput.removeTextChangedListener(it) }
-        moviesSearchPresenter?.detachView()
-        moviesSearchPresenter?.onDestroy()
-
-        if (isFinishing()) {
-            // Очищаем ссылку на Presenter в Application
-            (this.application as? MoviesApplication)?.moviesSearchPresenter = null
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        moviesSearchPresenter?.detachView()
-    }
 }
