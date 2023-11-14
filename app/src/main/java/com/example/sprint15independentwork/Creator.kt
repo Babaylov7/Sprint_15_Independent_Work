@@ -1,6 +1,5 @@
 package com.example.sprint15independentwork
 
-import android.app.Activity
 import android.content.Context
 import com.example.sprint15independentwork.data.MoviesRepositoryImpl
 import com.example.sprint15independentwork.data.network.RetrofitNetworkClient
@@ -21,8 +20,8 @@ object Creator {
         return MoviesInteractorImpl(getMoviesRepository(context))
     }
 
-    fun provideMoviesSearchPresenter(moviesView: MoviesView, context: Context): MoviesSearchPresenter {
-        return MoviesSearchPresenter(moviesView, context)
+    fun provideMoviesSearchPresenter(context: Context): MoviesSearchPresenter {
+        return MoviesSearchPresenter(context)
     }
 
     fun providePosterPresenter(view: PosterView, imageUrl: String): PosterPresenter {

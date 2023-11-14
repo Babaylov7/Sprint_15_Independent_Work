@@ -2,9 +2,8 @@ package com.example.sprint15independentwork.presentation.movies
 
 import com.example.sprint15independentwork.domain.models.Movie
 
-interface MoviesView {
-
-    fun render(state: MoviesState)
-
-    fun showMessage(additionalMessage: String)
-}
+data class MoviesState(
+    val movies: List<Movie>,
+    val isLoading: Boolean,
+    val errorMessage: String?
+)
