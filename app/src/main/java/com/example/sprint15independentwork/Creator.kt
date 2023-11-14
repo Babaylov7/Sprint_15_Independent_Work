@@ -8,9 +8,9 @@ import com.example.sprint15independentwork.domain.api.MoviesInteractor
 import com.example.sprint15independentwork.domain.api.MoviesRepository
 import com.example.sprint15independentwork.domain.impl.MoviesInteractorImpl
 import com.example.sprint15independentwork.presentation.movies.MoviesSearchPresenter
-import com.example.sprint15independentwork.presentation.PosterController
+import com.example.sprint15independentwork.presentation.poster.PosterPresenter
 import com.example.sprint15independentwork.presentation.movies.MoviesView
-import com.example.sprint15independentwork.ui.movies.MoviesAdapter
+import com.example.sprint15independentwork.presentation.poster.PosterView
 
 object Creator {
     private fun getMoviesRepository(context: Context): MoviesRepository {
@@ -25,7 +25,7 @@ object Creator {
         return MoviesSearchPresenter(moviesView, context)
     }
 
-    fun providePosterController(activity: Activity): PosterController {
-        return PosterController(activity)
+    fun providePosterPresenter(view: PosterView, imageUrl: String): PosterPresenter {
+        return PosterPresenter(view, imageUrl)
     }
 }
